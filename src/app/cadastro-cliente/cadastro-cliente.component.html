@@ -1,0 +1,126 @@
+
+<mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
+
+<div class="container col-sm-6" >
+
+    <div class="display-5 text-center my-3" *ngIf="!buttonCadastroIndicacao">
+        Cadastro Cliente
+    </div>
+    <div class="text-center">
+        <mat-card style="margin-bottom: 10px; padding-bottom: 10px;">
+    
+            <form [formGroup]="cadastro" class="example-form my-5" >
+              
+                    <div class="row">
+
+                        <mat-form-field class="example-full-width" appearance="fill" *ngIf="codigoCliente">
+                            <mat-label>Codigo do Cliente</mat-label>
+                            <input matInput formControlName="codigo" readonly>
+                        </mat-form-field>
+
+                        <mat-form-field class="example-full-width" appearance="fill">
+                            <mat-label>Nome</mat-label>
+                            <input matInput  formControlName="nome">
+                        </mat-form-field>
+    
+                        <mat-form-field class="example-full-width" appearance="fill">
+                            <mat-label>Sobrenome</mat-label>
+                            <input matInput  formControlName="sobrenome">
+                        </mat-form-field>
+    
+                        <mat-form-field class="example-full-width" appearance="fill">
+                            <mat-label>CPF</mat-label>
+                            <input matInput  formControlName="cpf" *ngIf="!inputCPF">
+                            <input matInput  formControlName="cpf" readonly *ngIf="inputCPF">
+                        </mat-form-field>
+    
+                        <mat-form-field class="example-full-width" appearance="fill">
+                            <mat-label>E-mail</mat-label>
+                            <input matInput  formControlName="email">
+                        </mat-form-field>
+                        
+                        <mat-form-field  appearance="fill" class="col-sm-12">
+                            <mat-label>DDD</mat-label>
+                            <input matInput  formControlName="ddd">
+                        </mat-form-field>
+
+                        <mat-form-field appearance="fill" class="col-sm-12">
+                            <mat-label>Telefone</mat-label>
+                            <input matInput  formControlName="telefone">
+                        </mat-form-field>
+
+                        <mat-form-field appearance="fill" class="col-sm-12">
+                            <mat-label>Tipo de Telefone</mat-label>
+                            <mat-select  formControlName="tipoTelefone">
+                            <mat-option *ngFor="let tipo of formaTelefone" [value]="tipo.nrTipoTelefone">
+                                {{tipo.tipoTelefone}}
+                            </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+
+                        <mat-form-field appearance="fill" class="col-sm-12">
+                            <mat-label>Grau Parentesco</mat-label>
+                            <mat-select  formControlName="tipoGrauParentesco">
+                            <mat-option *ngFor="let tipo of grauParentesco" [value]="tipo.nrTipoGrauRelacionamento">
+                                {{tipo.grauRelacionamento}}
+                            </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+
+                    </div>
+
+                    <div class="text-end my-3">
+                        <button mat-raised-button color="primary" (click)="cadastrarCliente()" *ngIf="buttonCadastro">Cadastrar</button>
+                        <button mat-raised-button color="primary" (click)="cadastrarRelacionamento()" *ngIf="buttonCadastroIndicacao">Cadastrar Relacionamento</button>
+                        <button mat-raised-button color="primary" style="margin-left: 10px;"  (click)="novoCadastro()" *ngIf="buttonNovoCadastro">Novo Cadastro</button>
+                       
+                    </div>
+
+                    <mat-accordion *ngIf="indicacao" >
+                        <mat-expansion-panel (opened)="panelOpenState = true"
+                                             (closed)="panelOpenState = false">
+                          <mat-expansion-panel-header>
+                            <mat-panel-title>
+                              Relacionamento
+                            </mat-panel-title>
+
+                          </mat-expansion-panel-header>
+                            <table mat-table [dataSource]="dataSource" multiTemplateDataRows class="mat-elevation-z8">
+                                <ng-container matColumnDef="{{column}}" *ngFor="let column of columnsToDisplay">
+                                    <th mat-header-cell *matHeaderCellDef> {{column}} </th>
+                                    <td mat-cell *matCellDef="let element"> {{element[column]}} </td>
+                                </ng-container>
+
+                                <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
+                                <ng-container matColumnDef="expandedDetail">
+                                    <td mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplay.length">
+                                    <div class="example-element-detail"
+                                        [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+
+                                            <div class="example-element-position"> {{element.position}} </div>
+                                            <div class="example-element-symbol"> {{element.symbol}} </div>
+                                            <div class="example-element-name"> {{element.name}} </div>
+                                            <div class="example-element-weight"> {{element.weight}} </div>
+
+                                        <div class="example-element-description">{{element.description}}</div>
+                                    </div>
+                                    </td>
+                                </ng-container>
+
+                                <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
+                                <tr mat-row *matRowDef="let element; columns: columnsToDisplay;" class="example-element-row" [class.example-expanded-row]="expandedElement === element"
+                                    (click)="expandedElement = expandedElement === element ? null : element">
+                                </tr>
+                                <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
+                            </table>
+                            <div class="text-end" style="margin-top: 10px;">
+                                <button mat-raised-button color="primary" (click)="openDialog()">indicar</button>
+                            </div>
+                        </mat-expansion-panel>
+                        
+                      </mat-accordion>
+
+              </form>
+        </mat-card>
+    </div>
+</div>
